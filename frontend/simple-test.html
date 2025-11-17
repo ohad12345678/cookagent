@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>בדיקה פשוטה</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .tab { padding: 10px 20px; margin: 5px; border: 2px solid #8B7355; background: white; cursor: pointer; }
+        .tab.active { background: #8B7355; color: white; }
+        .tab-panel { display: none; padding: 20px; margin-top: 10px; border: 1px solid #ccc; }
+        .tab-panel.active { display: block; }
+    </style>
+</head>
+<body>
+    <h1>בדיקת טאבים</h1>
+
+    <div>
+        <button class="tab active" data-tab="upload" onclick="alert('Upload clicked!')">העלאה</button>
+        <button class="tab" data-tab="chat" onclick="alert('Chat clicked!')">צ'אט</button>
+        <button class="tab" data-tab="analysis" onclick="alert('Analysis clicked!')">ניתוח</button>
+    </div>
+
+    <div class="tab-panel active" id="upload-tab">
+        <h2>טאב העלאה</h2>
+        <p>זה תוכן של טאב העלאה</p>
+        <button id="testBtn">כפתור בדיקה</button>
+    </div>
+
+    <div class="tab-panel" id="chat-tab">
+        <h2>טאב צ'אט</h2>
+        <p>זה תוכן של טאב צ'אט</p>
+    </div>
+
+    <div class="tab-panel" id="analysis-tab">
+        <h2>טאב ניתוח</h2>
+        <p>זה תוכן של טאב ניתוח</p>
+    </div>
+
+    <div style="margin-top: 20px; padding: 10px; background: #f0f0f0;">
+        <h3>Console Logs:</h3>
+        <div id="logs"></div>
+    </div>
+
+    <script>
+        const logDiv = document.getElementById('logs');
+        function log(msg) {
+            console.log(msg);
+            logDiv.innerHTML += '<div>' + msg + '</div>';
+        }
+
+        log('Script loaded');
+
+        // Add event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            log('DOM loaded');
+
+            const tabs = document.querySelectorAll('.tab');
+            log('Found ' + tabs.length + ' tabs');
+
+            tabs.forEach(tab => {
+                log('Attaching listener to: ' + tab.dataset.tab);
+                tab.addEventListener('click', (e) => {
+                    log('Clicked: ' + e.target.dataset.tab);
+
+                    // Update tabs
+                    document.querySelectorAll('.tab').forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    e.target.classList.add('active');
+
+                    // Update panels
+                    document.querySelectorAll('.tab-panel').forEach(p => {
+                        p.classList.remove('active');
+                    });
+                    const panelId = e.target.dataset.tab + '-tab';
+                    log('Showing panel: ' + panelId);
+                    document.getElementById(panelId).classList.add('active');
+                });
+            });
+
+            // Test button
+            document.getElementById('testBtn').addEventListener('click', () => {
+                log('Test button clicked!');
+                alert('Test button works!');
+            });
+
+            log('Initialization complete');
+        });
+
+        log('Script end reached');
+    </script>
+</body>
+</html>

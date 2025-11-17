@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test</title>
+</head>
+<body>
+    <button class="tab" data-tab="upload">Upload</button>
+    <button class="tab" data-tab="chat">Chat</button>
+
+    <div id="upload-tab" class="tab-panel active">Upload Panel</div>
+    <div id="chat-tab" class="tab-panel">Chat Panel</div>
+
+    <script>
+        console.log('Script loaded');
+
+        document.querySelectorAll('.tab').forEach(tab => {
+            console.log('Found tab:', tab.dataset.tab);
+            tab.addEventListener('click', (e) => {
+                console.log('Tab clicked:', e.target.dataset.tab);
+
+                // Update tabs
+                document.querySelectorAll('.tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                e.target.classList.add('active');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(p => {
+                    p.classList.remove('active');
+                });
+                const panelId = e.target.dataset.tab + '-tab';
+                console.log('Showing panel:', panelId);
+                document.getElementById(panelId).classList.add('active');
+            });
+        });
+
+        console.log('Event listeners attached');
+    </script>
+
+    <style>
+        .tab { padding: 10px; margin: 5px; }
+        .tab.active { background: blue; color: white; }
+        .tab-panel { display: none; padding: 20px; border: 1px solid black; margin: 10px; }
+        .tab-panel.active { display: block; }
+    </style>
+</body>
+</html>

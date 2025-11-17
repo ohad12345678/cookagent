@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>השוואת עיצובים - שחור/לבן/סגול</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #f5f5f5;
+            padding: 2rem;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .comparison-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #000;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .column {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .column-title {
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #000;
+        }
+
+        /* Option 1: Pure Black/White/Purple */
+        .option1 {
+            --black: #000000;
+            --white: #FFFFFF;
+            --purple-lightest: #FAF5FF;
+            --purple-light: #E9D5FF;
+            --purple: #A855F7;
+            --purple-dark: #9333EA;
+        }
+
+        .option1 .nav {
+            background: var(--white);
+            border: 2px solid var(--black);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option1 .nav-brand {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--black);
+        }
+
+        .option1 .nav-tabs {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .option1 .nav-tab {
+            color: var(--black);
+            text-decoration: none;
+            padding-bottom: 0.25rem;
+            border-bottom: 2px solid transparent;
+            font-weight: 500;
+        }
+
+        .option1 .nav-tab.active {
+            border-bottom-color: var(--purple);
+        }
+
+        .option1 .card {
+            background: var(--white);
+            border: 2px solid var(--black);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .option1 .card-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .option1 .card-name {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--black);
+        }
+
+        .option1 .card-date {
+            font-size: 0.875rem;
+            color: var(--black);
+        }
+
+        .option1 .card-salary {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 0.5rem;
+        }
+
+        .option1 .card-status {
+            color: var(--purple);
+            font-weight: 600;
+        }
+
+        .option1 .btn-primary {
+            background: var(--purple);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.875rem;
+            margin-right: 0.5rem;
+        }
+
+        .option1 .btn-primary:hover {
+            background: var(--purple-dark);
+        }
+
+        .option1 .btn-secondary {
+            background: var(--white);
+            color: var(--black);
+            border: 2px solid var(--black);
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .option1 .btn-secondary:hover {
+            background: var(--purple-lightest);
+        }
+
+        .option1 .input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--black);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .option1 .input:focus {
+            outline: none;
+            border-color: var(--purple);
+            background: var(--purple-lightest);
+        }
+
+        .option1 .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .option1 .table th {
+            background: var(--black);
+            color: var(--white);
+            padding: 0.75rem;
+            text-align: right;
+            font-weight: 600;
+            border: 2px solid var(--black);
+        }
+
+        .option1 .table td {
+            padding: 0.75rem;
+            border: 2px solid var(--black);
+        }
+
+        /* Option 2: Black/White/Purple + Subtle Gray */
+        .option2 {
+            --black: #000000;
+            --white: #FFFFFF;
+            --border: #E5E7EB;
+            --bg-subtle: #F9FAFB;
+            --purple-lightest: #FAF5FF;
+            --purple-light: #E9D5FF;
+            --purple: #A855F7;
+            --purple-dark: #9333EA;
+        }
+
+        .option2 .nav {
+            background: var(--white);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option2 .nav-brand {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--black);
+        }
+
+        .option2 .nav-tabs {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .option2 .nav-tab {
+            color: var(--black);
+            text-decoration: none;
+            padding-bottom: 0.25rem;
+            border-bottom: 2px solid transparent;
+            font-weight: 500;
+        }
+
+        .option2 .nav-tab.active {
+            border-bottom-color: var(--purple);
+        }
+
+        .option2 .card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .option2 .card-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .option2 .card-name {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--black);
+        }
+
+        .option2 .card-date {
+            font-size: 0.875rem;
+            color: var(--black);
+        }
+
+        .option2 .card-salary {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 0.5rem;
+        }
+
+        .option2 .card-status {
+            color: var(--purple);
+            font-weight: 600;
+        }
+
+        .option2 .btn-primary {
+            background: var(--purple);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.875rem;
+            margin-right: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .option2 .btn-primary:hover {
+            background: var(--purple-dark);
+        }
+
+        .option2 .btn-secondary {
+            background: var(--white);
+            color: var(--black);
+            border: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .option2 .btn-secondary:hover {
+            background: var(--bg-subtle);
+            border-color: var(--purple);
+        }
+
+        .option2 .input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            background: var(--white);
+        }
+
+        .option2 .input:focus {
+            outline: none;
+            border-color: var(--purple);
+            background: var(--purple-lightest);
+        }
+
+        .option2 .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .option2 .table th {
+            background: var(--black);
+            color: var(--white);
+            padding: 0.75rem;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .option2 .table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .option2 .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 2rem 0 1rem 0;
+            color: #666;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .option1 .kpi-card {
+            background: var(--white);
+            border: 2px solid var(--black);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .option2 .kpi-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-label {
+            font-size: 0.875rem;
+            color: var(--black);
+        }
+    </style>
+</head>
+<body>
+    <div class="comparison-container">
+        <div class="header">
+            <h1>השוואת עיצובים: שחור/לבן/סגול</h1>
+            <p>בחר את הגרסה שנראית לך יותר נכונה למערכת</p>
+        </div>
+
+        <div class="columns">
+            <!-- Option 1: Pure Black/White/Purple -->
+            <div class="column option1">
+                <h2 class="column-title">אופציה 1: שחור + לבן + סגול (ללא אפור)</h2>
+
+                <!-- Navigation -->
+                <div class="nav">
+                    <div class="nav-brand">📊 PayFlow</div>
+                    <div class="nav-tabs">
+                        <a href="#" class="nav-tab active">העלאה</a>
+                        <a href="#" class="nav-tab">תוצאות</a>
+                        <a href="#" class="nav-tab">ניתוח</a>
+                    </div>
+                </div>
+
+                <div class="section-title">KPI Cards</div>
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-value">16</div>
+                        <div class="kpi-label">עובדים</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">156,240₪</div>
+                        <div class="kpi-label">שכר כולל</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">0</div>
+                        <div class="kpi-label">אנומליות</div>
+                    </div>
+                </div>
+
+                <div class="section-title">Employee Cards</div>
+                <!-- Card 1 -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-name">עיטם רז</div>
+                        <div class="card-date">10/2025</div>
+                    </div>
+                    <div class="card-salary">7,410 ₪</div>
+                    <div class="card-status">✓ תקין</div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-name">סלע דולב</div>
+                        <div class="card-date">10/2025</div>
+                    </div>
+                    <div class="card-salary">15,820 ₪</div>
+                    <div class="card-status">✓ תקין</div>
+                </div>
+
+                <div class="section-title">Input & Buttons</div>
+                <!-- Input -->
+                <input type="text" class="input" placeholder="חפש עובד או תלוש...">
+
+                <!-- Buttons -->
+                <button class="btn-primary">העלה תלושים</button>
+                <button class="btn-secondary">ייצא נתונים</button>
+
+                <div class="section-title">Data Table</div>
+                <!-- Table -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>שם עובד</th>
+                            <th>מחלקה</th>
+                            <th>שכר</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>עיטם רז</td>
+                            <td>003</td>
+                            <td>7,410 ₪</td>
+                        </tr>
+                        <tr>
+                            <td>סלע דולב</td>
+                            <td>002</td>
+                            <td>15,820 ₪</td>
+                        </tr>
+                        <tr>
+                            <td>מיגל חורחה</td>
+                            <td>003</td>
+                            <td>12,350 ₪</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Option 2: Black/White/Purple + Subtle Gray -->
+            <div class="column option2">
+                <h2 class="column-title">אופציה 2: שחור + לבן + סגול + אפור עדין</h2>
+
+                <!-- Navigation -->
+                <div class="nav">
+                    <div class="nav-brand">📊 PayFlow</div>
+                    <div class="nav-tabs">
+                        <a href="#" class="nav-tab active">העלאה</a>
+                        <a href="#" class="nav-tab">תוצאות</a>
+                        <a href="#" class="nav-tab">ניתוח</a>
+                    </div>
+                </div>
+
+                <div class="section-title">KPI Cards</div>
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-value">16</div>
+                        <div class="kpi-label">עובדים</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">156,240₪</div>
+                        <div class="kpi-label">שכר כולל</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-value">0</div>
+                        <div class="kpi-label">אנומליות</div>
+                    </div>
+                </div>
+
+                <div class="section-title">Employee Cards</div>
+                <!-- Card 1 -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-name">עיטם רז</div>
+                        <div class="card-date">10/2025</div>
+                    </div>
+                    <div class="card-salary">7,410 ₪</div>
+                    <div class="card-status">✓ תקין</div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-name">סלע דולב</div>
+                        <div class="card-date">10/2025</div>
+                    </div>
+                    <div class="card-salary">15,820 ₪</div>
+                    <div class="card-status">✓ תקין</div>
+                </div>
+
+                <div class="section-title">Input & Buttons</div>
+                <!-- Input -->
+                <input type="text" class="input" placeholder="חפש עובד או תלוש...">
+
+                <!-- Buttons -->
+                <button class="btn-primary">העלה תלושים</button>
+                <button class="btn-secondary">ייצא נתונים</button>
+
+                <div class="section-title">Data Table</div>
+                <!-- Table -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>שם עובד</th>
+                            <th>מחלקה</th>
+                            <th>שכר</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>עיטם רז</td>
+                            <td>003</td>
+                            <td>7,410 ₪</td>
+                        </tr>
+                        <tr>
+                            <td>סלע דולב</td>
+                            <td>002</td>
+                            <td>15,820 ₪</td>
+                        </tr>
+                        <tr>
+                            <td>מיגל חורחה</td>
+                            <td>003</td>
+                            <td>12,350 ₪</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: white; border-radius: 8px;">
+            <h3 style="margin-bottom: 1rem;">מה דעתך?</h3>
+            <p style="color: #666; line-height: 1.6;">
+                <strong>אופציה 1 (שמאל):</strong> נועז, חד, ניגודיות גבוהה - מתאים לאפליקציות טכניות/פיננסיות<br>
+                <strong>אופציה 2 (ימין):</strong> רך יותר, קל לעיניים, מקצועי - מתאים למערכות ניהול ו-dashboards
+            </p>
+        </div>
+    </div>
+</body>
+</html>

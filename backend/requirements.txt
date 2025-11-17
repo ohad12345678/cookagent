@@ -1,0 +1,35 @@
+# Core Web Framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+python-multipart>=0.0.6
+
+# Database
+sqlalchemy>=2.0.25
+psycopg2-binary>=2.9.9
+alembic>=1.13.1
+
+# Pydantic - compatible versions
+pydantic>=2.7.4,<3.0.0
+pydantic-settings>=2.4.0,<3.0.0
+python-dotenv>=1.0.0
+
+# PDF Processing
+PyPDF2>=3.0.1
+pdfplumber>=0.10.3
+
+# AI & Multi-Agent - compatible versions
+anthropic>=0.39.0
+langchain>=0.3.0
+langchain-anthropic>=0.2.0
+langchain-community>=0.3.0
+crewai>=0.80.0
+crewai-tools>=0.12.0
+
+# Vector DB & Embeddings
+chromadb>=0.5.0
+sentence-transformers>=3.0.0
+
+# Data processing
+pandas>=2.1.0
+numpy>=1.26.0
+pillow>=10.0.0

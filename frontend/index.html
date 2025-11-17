@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Payslip Agent System - מערכת ניתוח תלושי שכר</title>
+    <link rel="stylesheet" href="styles.css?v=20251117-06">
+    <!-- Chart.js for graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Template Library -->
+    <script src="templates.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="brand">
+                <div class="logo">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 2a10 10 0 0 1 0 20"/>
+                        <circle cx="12" cy="12" r="4"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>Payslip Agent System</h1>
+                    <p>Learning Multi-Agent Analysis</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3>סוכנים</h3>
+            <div class="agents-list">
+                <div class="agent-card" data-agent="chat">
+                    <div class="agent-header">
+                        <span class="agent-name">Chat Agent</span>
+                    </div>
+                    <p class="agent-status">מנהל ומתזמר את כל הסוכנים</p>
+                </div>
+
+                <div class="agent-card" data-agent="parser">
+                    <div class="agent-header">
+                        <span class="agent-name">Parser</span>
+                    </div>
+                    <p class="agent-status">מחלץ שדות מתלושי PDF</p>
+                </div>
+
+                <div class="agent-card" data-agent="analyzer">
+                    <div class="agent-header">
+                        <span class="agent-name">Analyzer</span>
+                    </div>
+                    <p class="agent-status">מנתח נתונים, מזהה אנומליות ומגמות</p>
+                </div>
+
+                <div class="agent-card" data-agent="validator">
+                    <div class="agent-header">
+                        <span class="agent-name">Validator</span>
+                    </div>
+                    <p class="agent-status">בודק תקינות נתונים</p>
+                </div>
+
+                <div class="agent-card" data-agent="designer">
+                    <div class="agent-header">
+                        <span class="agent-name">Designer</span>
+                    </div>
+                    <p class="agent-status">מציג נתונים בטבלאות</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" data-tab="upload">📤 העלאה</button>
+                <button class="tab" data-tab="results">📊 תוצאות ניתוח</button>
+                <button class="tab" data-tab="chat">💬 צ'אט</button>
+                <button class="tab" data-tab="analysis">📊 ניתוח חודשי</button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Upload Tab -->
+                <div class="tab-panel active" id="upload-tab">
+                    <div class="upload-section">
+                        <h2>העלאת תלושי שכר לניתוח</h2>
+                        <div class="upload-area" id="uploadArea">
+                            <svg class="upload-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            <p class="upload-text">גרור קבצי PDF לכאן או לחץ לבחירה</p>
+                            <p class="upload-hint">תומך בקבצי PDF מרובים - העלה מספר תלושים במקביל</p>
+                            <input type="file" id="fileInput" accept=".pdf" multiple style="display: none;">
+                        </div>
+
+                        <div id="selectedFiles" class="selected-files" style="display: none;">
+                            <div id="filesList"></div>
+                            <button id="clearFiles" class="btn-remove" style="margin-top: 0.5rem;">נקה הכל</button>
+                        </div>
+
+                        <button id="uploadBtn" class="btn-primary" disabled>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="16 12 10 12 13 9"/>
+                            </svg>
+                            <span id="uploadBtnText">נתח תלושים</span>
+                        </button>
+
+                        <div id="uploadProgress" style="display: none; margin-top: 1rem;">
+                            <div style="margin-bottom: 0.5rem; color: var(--text-primary);">
+                                <span id="progressText">מעלה קבצים...</span>
+                            </div>
+                            <div style="background: var(--bg-tertiary); border-radius: 8px; height: 24px; overflow: hidden;">
+                                <div id="progressBar" style="background: var(--beige-accent); height: 100%; width: 0%; transition: width 0.3s;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Tab -->
+                <div class="tab-panel" id="results-tab">
+                    <div class="results-section">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <h2>תוצאות ניתוח תלושים</h2>
+                            <div style="display: flex; gap: 1rem; align-items: center;">
+                                <label for="monthFilter" style="font-weight: 600;">סינון לפי חודש:</label>
+                                <select id="monthFilter" style="padding: 0.5rem 1rem; border-radius: 6px; border: 2px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary);">
+                                    <option value="">כל החודשים</option>
+                                </select>
+                                <button onclick="applyMonthFilter()" class="btn-primary">סנן</button>
+                            </div>
+                        </div>
+
+                        <div id="analysisResults">
+                            <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                                <p>טוען נתונים...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Tab -->
+                <div class="tab-panel" id="chat-tab">
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="chat-message agent">
+                                <span class="message-agent">AI Assistant</span>
+                                <div class="message-content">
+                                    שלום! 👋 אני עוזר וירטואלי לניתוח תלושי שכר.
+                                    <br><br>
+                                    <strong>אני יכול לענות על שאלות כמו:</strong>
+                                    <ul style="margin: 0.5rem 0; padding-right: 1.5rem;">
+                                        <li>מה השכר ברוטו/נטו?</li>
+                                        <li>כמה שעות עבדתי החודש?</li>
+                                        <li>מה הניכויים שלי?</li>
+                                        <li>כמה ימי חופש יש לי?</li>
+                                    </ul>
+                                    <br>
+                                    <em style="color: var(--text-tertiary); font-size: 0.875rem;">💡 טיפ: העלה תלוש כדי לקבל ניתוח מפורט ותשובות מדויקות</em>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-input-container">
+                            <input type="text" id="chatInput" class="chat-input" placeholder="שאל שאלה על התלוש..." />
+                            <button id="chatSend" class="chat-send">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Tab - Monthly Analysis -->
+                <div class="tab-panel" id="analysis-tab">
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span>סה"כ תלושים</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                </svg>
+                            </div>
+                            <p class="stat-value" id="stat-total-payslips">-</p>
+                        </div>
+
+                        <div class="stat-card success">
+                            <div class="stat-header">
+                                <span>תלושים תקינים</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <p class="stat-value" id="stat-valid-payslips">-</p>
+                        </div>
+
+                        <div class="stat-card warning">
+                            <div class="stat-header">
+                                <span>עם אנומליות</span>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                            </div>
+                            <p class="stat-value" id="stat-anomalies">-</p>
+                        </div>
+                    </div>
+
+                    <!-- Month Selection -->
+                    <div style="margin: 2rem 0 1rem 0;">
+                        <label for="monthSelect" style="margin-left: 0.5rem; font-weight: 600; font-size: 1rem;">בחר חודש לניתוח:</label>
+                        <select id="monthSelect" style="padding: 0.5rem 0.9rem; border-radius: 4px; border: 1px solid var(--border-color); background: white; color: #000000; font-size: 0.875rem; margin-right: 0.5rem; font-weight: 600;">
+                            <option value="">טוען חודשים...</option>
+                        </select>
+                        <button class="btn-primary" onclick="loadMonthlyAnalysis()">
+                            טען ניתוח
+                        </button>
+                    </div>
+
+                    <!-- Visualization Generator -->
+                    <div style="margin: 2rem 0; padding: 1.5rem; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="margin: 0; color: #333;">צור תצוגה מותאמת אישית</h3>
+                            <button onclick="toggleVisualizationPrompt()" class="btn-primary">
+                                + הוסף תצוגה
+                            </button>
+                        </div>
+
+                        <div id="visualizationPromptContainer" style="display: none; margin-top: 1rem;">
+                            <p style="margin: 0 0 1rem 0; color: #666; font-size: 0.875rem;">
+                                כתב מה תרצה לראות והמערכת תיצור את התצוגה אוטומטית<br>
+                                <strong>דוגמאות:</strong> "גרף עמודות של שכר ברוטו לפי עובדים" | "טבלה של כל העובדים עם שכר נטו"
+                            </p>
+
+                            <!-- Month Selection for Visualization -->
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">בחר חודש לניתוח:</label>
+                                <select id="visualizationMonthSelect" class="month-select" style="padding: 0.5rem 0.9rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.875rem; width: 200px; font-weight: 600;">
+                                    <option value="">-- בחר חודש --</option>
+                                </select>
+                            </div>
+
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                <input
+                                    type="text"
+                                    id="visualizationPrompt"
+                                    placeholder="לדוגמה: הצג גרף עמודות של שכר ברוטו לפי עובדים..."
+                                    style="flex: 1; padding: 0.5rem 0.9rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.875rem;"
+                                />
+                                <button onclick="generateVisualization()" class="btn-primary" style="white-space: nowrap;">
+                                    צור תצוגה
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Monthly Analysis Content -->
+                    <div id="monthlyAnalysisContent">
+                        <p style="text-align: center; color: var(--text-secondary); padding: 2rem;">בחר חודש כדי לראות ניתוח מפורט</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>מנתח תלוש...</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js?v=20251117-12"></script>
+</body>
+</html>

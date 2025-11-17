@@ -1,0 +1,57 @@
+name: payslip-system
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: payslip-db
+    environment:
+      POSTGRES_USER: payslip_user
+      POSTGRES_PASSWORD: payslip_pass
+      POSTGRES_DB: payslip_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U payslip_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: payslip-backend
+    environment:
+      DATABASE_URL: postgresql://payslip_user:payslip_pass@db:5432/payslip_db
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      OPENAI_API_KEY: sk-dummy-key-for-crewai
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./data:/app/data
+      - ./src:/app/src
+      - ./backend/app:/app/app
+    depends_on:
+      db:
+        condition: service_healthy
+    command: uvicorn app.main:app --host 0.0.0.0 --port 9000 --reload
+
+  # Frontend (Nginx)
+  frontend:
+    image: nginx:alpine
+    container_name: payslip-frontend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

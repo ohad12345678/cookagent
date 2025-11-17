@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>DEBUG - בדיקת טאבים</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #1a1a2e; color: #eee; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab {
+            padding: 15px 30px;
+            background: #16213e;
+            border: 2px solid #0f3460;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .tab.active { background: #06b6d4; color: #000; border-color: #06b6d4; }
+        .tab-panel {
+            display: none;
+            padding: 30px;
+            background: #16213e;
+            border-radius: 12px;
+            min-height: 300px;
+        }
+        .tab-panel.active { display: block; }
+        #debug {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 DEBUG - בדיקת מערכת הטאבים</h1>
+
+    <div class="tabs">
+        <button class="tab active" data-tab="upload" onclick="debug('Inline onclick: upload')">📤 העלאה</button>
+        <button class="tab" data-tab="results" onclick="debug('Inline onclick: results')">📊 תוצאות</button>
+        <button class="tab" data-tab="chat" onclick="debug('Inline onclick: chat')">💬 צ'אט</button>
+        <button class="tab" data-tab="analysis" onclick="debug('Inline onclick: analysis')">📊 ניתוח</button>
+        <button class="tab" data-tab="payslips" onclick="debug('Inline onclick: payslips')">📋 תלושים</button>
+    </div>
+
+    <div class="tab-content">
+        <div class="tab-panel active" id="upload-tab">
+            <h2>טאב העלאה</h2>
+            <p>זה טאב ההעלאה - אמור להיות פעיל בהתחלה</p>
+        </div>
+
+        <div class="tab-panel" id="results-tab">
+            <h2>טאב תוצאות</h2>
+            <p>זה טאב התוצאות</p>
+        </div>
+
+        <div class="tab-panel" id="chat-tab">
+            <h2>טאב צ'אט</h2>
+            <p>זה טאב הצ'אט</p>
+        </div>
+
+        <div class="tab-panel" id="analysis-tab">
+            <h2>טאב ניתוח</h2>
+            <p>זה טאב הניתוח החודשי</p>
+        </div>
+
+        <div class="tab-panel" id="payslips-tab">
+            <h2>טאב תלושים</h2>
+            <p>זה טאב התלושים</p>
+        </div>
+    </div>
+
+    <div id="debug"></div>
+
+    <script>
+        const debugLog = [];
+
+        function debug(msg) {
+            const timestamp = new Date().toLocaleTimeString();
+            debugLog.push(`[${timestamp}] ${msg}`);
+            document.getElementById('debug').innerHTML = debugLog.join('<br>');
+            console.log(msg);
+        }
+
+        function switchTab(tabName) {
+            debug(`switchTab called with: ${tabName}`);
+
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                const isActive = tab.dataset.tab === tabName;
+                tab.classList.toggle('active', isActive);
+                debug(`  Tab ${tab.dataset.tab}: ${isActive ? 'ACTIVE' : 'inactive'}`);
+            });
+
+            // Update tab panels
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                const panelId = `${tabName}-tab`;
+                const isActive = panel.id === panelId;
+                panel.classList.toggle('active', isActive);
+                debug(`  Panel ${panel.id}: ${isActive ? 'ACTIVE (display:block)' : 'inactive (display:none)'}`);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            debug('=== DOM Content Loaded ===');
+
+            const tabs = document.querySelectorAll('.tab');
+            debug(`Found ${tabs.length} tabs`);
+
+            tabs.forEach(tab => {
+                debug(`Attaching listener to: ${tab.dataset.tab}`);
+                tab.addEventListener('click', (e) => {
+                    debug(`EVENT LISTENER FIRED: ${e.target.dataset.tab}`);
+                    switchTab(e.target.dataset.tab);
+                });
+            });
+
+            debug('=== Initialization Complete ===');
+            debug('Try clicking tabs now!');
+        });
+    </script>
+</body>
+</html>
