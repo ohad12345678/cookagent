@@ -8,6 +8,27 @@ let selectedFiles = []; // Array for multiple files
 let currentResults = null;
 let currentTab = 'upload';
 
+// Check if logged in
+if (!localStorage.getItem('auth_token')) {
+    window.location.href = 'login.html';
+}
+
+// Show user email in header
+const userEmail = localStorage.getItem('user_email');
+if (userEmail) {
+    document.addEventListener('DOMContentLoaded', () => {
+        const emailSpan = document.getElementById('userEmail');
+        if (emailSpan) emailSpan.textContent = userEmail;
+    });
+}
+
+// Logout function
+function logout() {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user_email');
+    window.location.href = 'login.html';
+}
+
 // Initialize Application
 document.addEventListener('DOMContentLoaded', () => {
     console.log('[Init] Starting application initialization...');

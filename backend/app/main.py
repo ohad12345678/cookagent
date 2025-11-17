@@ -2459,6 +2459,29 @@ async def generate_visualization(
         }
 
 
+# =====================
+# Login Endpoint (NEW)
+# =====================
+
+from app.auth import authenticate, create_token
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+@app.post("/api/login")
+async def login(data: LoginRequest):
+    """התחברות למערכת"""
+    if authenticate(data.email, data.password):
+        token = create_token(data.email)
+        return {
+            "access_token": token,
+            "token_type": "bearer",
+            "user_email": data.email
+        }
+    raise HTTPException(status_code=401, detail="Email or password incorrect")
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=3000)

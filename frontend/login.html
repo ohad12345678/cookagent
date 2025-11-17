@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>כניסה - מערכת ניתוח תלושי שכר</title>
+    <link rel="stylesheet" href="styles.css?v=20251117-13">
+    <style>
+        /* Login-specific styles */
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--white);
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+        }
+
+        .login-card {
+            background: var(--white);
+            border: 2px solid var(--black);
+            border-radius: 0;
+            padding: 3rem 2.5rem;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-logo {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            background: var(--purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--white);
+        }
+
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--black);
+            margin: 0 0 0.5rem 0;
+        }
+
+        .login-subtitle {
+            font-size: 0.875rem;
+            color: var(--black);
+            opacity: 0.6;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--black);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border: 2px solid var(--black);
+            border-radius: 4px;
+            background: var(--white);
+            color: var(--black);
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--purple);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--black);
+            opacity: 0.4;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            background: var(--purple);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .login-button:hover {
+            background: var(--purple-dark);
+        }
+
+        .login-button:active {
+            transform: translateY(1px);
+        }
+
+        .login-button:disabled {
+            background: var(--black);
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: rgba(220, 38, 38, 0.1);
+            border: 2px solid rgb(220, 38, 38);
+            color: rgb(220, 38, 38);
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--white);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.75rem;
+            color: var(--black);
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">💼</div>
+                <h1 class="login-title">כניסה למערכת</h1>
+                <p class="login-subtitle">ניתוח תלושי שכר</p>
+            </div>
+
+            <div id="errorMessage" class="error-message"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="email">אימייל</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        class="form-input"
+                        placeholder="your@email.com"
+                        required
+                        autocomplete="email"
+                        autofocus
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">סיסמה</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-input"
+                        placeholder="••••••••"
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <button type="submit" id="loginButton" class="login-button">
+                    <span id="buttonText">התחבר</span>
+                </button>
+            </form>
+
+            <div class="login-footer">
+                מערכת ניתוח תלושי שכר עם AI
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.hostname === 'localhost'
+            ? 'http://localhost:9000'
+            : '/api';
+
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginButton = document.getElementById('loginButton');
+        const buttonText = document.getElementById('buttonText');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Check if already logged in
+        const token = localStorage.getItem('auth_token');
+        if (token) {
+            // Verify token is valid
+            fetch(`${API_BASE}/api/me`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Token is valid, redirect to main app
+                    window.location.href = 'index.html';
+                } else {
+                    // Token is invalid, clear it
+                    localStorage.removeItem('auth_token');
+                    localStorage.removeItem('user_email');
+                }
+            })
+            .catch(() => {
+                // Error checking token, clear it
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('user_email');
+            });
+        }
+
+        // Handle form submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Hide error message
+            errorMessage.classList.remove('show');
+
+            // Get form values
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            // Validate
+            if (!email || !password) {
+                showError('נא למלא את כל השדות');
+                return;
+            }
+
+            // Disable button and show loading
+            loginButton.disabled = true;
+            buttonText.innerHTML = 'מתחבר<span class="loading-spinner"></span>';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Save token and user info
+                    localStorage.setItem('auth_token', data.access_token);
+                    localStorage.setItem('user_email', data.user_email);
+
+                    // Redirect to main app
+                    window.location.href = 'index.html';
+                } else {
+                    // Show error
+                    showError(data.detail || 'שגיאה בהתחברות');
+                    loginButton.disabled = false;
+                    buttonText.textContent = 'התחבר';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('שגיאה בחיבור לשרת');
+                loginButton.disabled = false;
+                buttonText.textContent = 'התחבר';
+            }
+        });
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+        }
+
+        // Allow Enter key to submit
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                loginForm.dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>
